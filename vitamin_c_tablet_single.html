@@ -1,0 +1,922 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <!-- ไฟล์นี้รวม style.css, script.js และ assets ทั้งหมดไว้ใน HTML เดียวแล้ว -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>วิตามินซีแบบเม็ดขึ้นรูปได้อย่างไร</title>
+  <meta name="description" content="เว็บอธิบายการขึ้นรูปวิตามินซีแบบเม็ด พร้อมภาพประกอบและอนิเมชั่น" />
+  <style>
+:root {
+  --bg: #fff7ed;
+  --bg-2: #ffedd5;
+  --text: #27170f;
+  --muted: #7c5b45;
+  --card: rgba(255,255,255,.76);
+  --card-solid: #ffffff;
+  --line: rgba(124, 91, 69, .18);
+  --orange: #f97316;
+  --deep: #c2410c;
+  --yellow: #facc15;
+  --green: #22c55e;
+  --blue: #38bdf8;
+  --shadow: 0 24px 80px rgba(154, 52, 18, .18);
+  --radius: 28px;
+}
+
+[data-theme="dark"] {
+  --bg: #111827;
+  --bg-2: #1f2937;
+  --text: #fff7ed;
+  --muted: #d6b8a5;
+  --card: rgba(31,41,55,.72);
+  --card-solid: #172033;
+  --line: rgba(255,255,255,.14);
+  --orange: #fb923c;
+  --deep: #fdba74;
+  --yellow: #fde047;
+  --green: #4ade80;
+  --blue: #7dd3fc;
+  --shadow: 0 24px 80px rgba(0, 0, 0, .32);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(250, 204, 21, .35), transparent 34rem),
+    radial-gradient(circle at 80% 15%, rgba(249, 115, 22, .18), transparent 30rem),
+    linear-gradient(140deg, var(--bg), var(--bg-2));
+  line-height: 1.65;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(124, 91, 69, .05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(124, 91, 69, .05) 1px, transparent 1px);
+  background-size: 42px 42px;
+  pointer-events: none;
+  mask-image: linear-gradient(to bottom, black, transparent 70%);
+}
+
+img { max-width: 100%; display: block; }
+a { color: inherit; }
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 14px clamp(18px, 4vw, 64px);
+  background: rgba(255, 247, 237, .72);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(16px);
+}
+[data-theme="dark"] .topbar { background: rgba(17, 24, 39, .76); }
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  font-weight: 900;
+  letter-spacing: -.02em;
+}
+.brand small { color: var(--muted); font-weight: 700; }
+.brand-mark {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 15px;
+  color: white;
+  background: linear-gradient(135deg, var(--orange), var(--yellow));
+  box-shadow: 0 10px 28px rgba(249, 115, 22, .35);
+}
+.nav { display: flex; gap: 18px; align-items: center; }
+.nav a {
+  text-decoration: none;
+  font-weight: 800;
+  color: var(--muted);
+  font-size: .95rem;
+}
+.nav a:hover { color: var(--deep); }
+.theme-toggle {
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 10px 12px;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(0,0,0,.06);
+}
+
+.section { padding: clamp(56px, 8vw, 110px) clamp(18px, 5vw, 86px); }
+.hero {
+  min-height: calc(100vh - 70px);
+  display: grid;
+  grid-template-columns: 1.05fr .95fr;
+  align-items: center;
+  gap: clamp(28px, 6vw, 86px);
+}
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+  color: var(--deep);
+  font-weight: 900;
+  letter-spacing: .04em;
+}
+.eyebrow::before {
+  content: "";
+  width: 28px;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--orange);
+}
+h1, h2, h3 { line-height: 1.12; margin: 0; letter-spacing: -.04em; }
+h1 { font-size: clamp(2.45rem, 7vw, 5.8rem); max-width: 980px; }
+h2 { font-size: clamp(2rem, 4.5vw, 4rem); }
+h3 { font-size: 1.25rem; }
+.lead {
+  font-size: clamp(1.05rem, 1.6vw, 1.32rem);
+  color: var(--muted);
+  max-width: 720px;
+  margin: 24px 0 0;
+}
+.hero-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 32px; }
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 13px 20px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 900;
+  border: 1px solid var(--line);
+}
+.btn.primary { background: var(--text); color: var(--bg); border-color: transparent; }
+.btn.ghost { background: var(--card); color: var(--text); }
+
+.hero-visual {
+  position: relative;
+  min-height: 560px;
+  border-radius: 44px;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,.66), rgba(255,255,255,.18)),
+    radial-gradient(circle at 50% 38%, rgba(250,204,21,.45), transparent 15rem),
+    radial-gradient(circle at 65% 65%, rgba(249,115,22,.3), transparent 13rem);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--line);
+  overflow: hidden;
+  isolation: isolate;
+}
+[data-theme="dark"] .hero-visual { background: radial-gradient(circle at 50% 38%, rgba(251,146,60,.28), transparent 17rem), rgba(255,255,255,.04); }
+.tablet-main {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: min(58vw, 360px);
+  aspect-ratio: 1.55/1;
+  transform: translate(-50%, -50%) rotate(-12deg);
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  font-size: clamp(3rem, 12vw, 8rem);
+  color: rgba(255,255,255,.98);
+  background:
+    radial-gradient(circle at 25% 20%, rgba(255,255,255,.92), transparent 12%),
+    linear-gradient(145deg, #fb923c 0%, #f97316 42%, #c2410c 100%);
+  box-shadow:
+    inset 14px 12px 24px rgba(255,255,255,.28),
+    inset -22px -20px 35px rgba(124,45,18,.33),
+    0 40px 80px rgba(194,65,12,.34);
+  animation: floatTablet 4.8s ease-in-out infinite;
+}
+.tablet-main strong { filter: drop-shadow(0 4px 10px rgba(124,45,18,.3)); }
+.shine {
+  position: absolute;
+  inset: 18% auto auto 18%;
+  width: 36%;
+  height: 20%;
+  border-radius: 999px;
+  background: rgba(255,255,255,.38);
+  filter: blur(2px);
+  transform: rotate(-9deg);
+}
+.score-line {
+  position: absolute;
+  top: 18%; bottom: 18%; left: 50%;
+  width: 5px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.28);
+  transform: rotate(8deg);
+}
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(3px);
+  opacity: .55;
+  animation: drift 8s ease-in-out infinite;
+}
+.orb-a { width: 160px; height: 160px; left: 8%; top: 12%; background: var(--yellow); }
+.orb-b { width: 110px; height: 110px; right: 8%; bottom: 12%; background: var(--blue); animation-delay: -2s; }
+.float-chip {
+  position: absolute;
+  padding: 12px 16px;
+  border-radius: 18px;
+  background: rgba(255,255,255,.72);
+  border: 1px solid var(--line);
+  box-shadow: 0 18px 34px rgba(124,45,18,.12);
+  font-weight: 900;
+  animation: floatChip 5.5s ease-in-out infinite;
+}
+[data-theme="dark"] .float-chip { background: rgba(17,24,39,.72); }
+.float-chip span { display: block; font-weight: 700; color: var(--muted); font-size: .86rem; }
+.chip-1 { left: 8%; bottom: 17%; }
+.chip-2 { right: 8%; top: 18%; animation-delay: -1.2s; }
+.chip-3 { right: 13%; bottom: 27%; animation-delay: -2.6s; }
+.particle-field::before,
+.particle-field::after {
+  content: "";
+  position: absolute;
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: var(--orange);
+  box-shadow:
+    90px 30px 0 var(--yellow), 190px 120px 0 var(--green), 270px 80px 0 var(--orange),
+    320px 240px 0 var(--blue), 70px 280px 0 var(--deep), 430px 180px 0 var(--yellow),
+    150px 430px 0 var(--orange), 350px 390px 0 var(--green);
+  animation: sparkle 6s linear infinite;
+}
+.particle-field::after { left: 45%; top: 20%; animation-delay: -3s; opacity: .6; }
+
+.intro-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 20px;
+  padding-top: 20px;
+}
+.glass-card, .stat-card, .info-card, .step, .lab-card, .safety-card, .references {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(14px);
+}
+.big-card { padding: 30px; }
+.big-card p { color: var(--muted); margin-bottom: 0; }
+.stat-card { padding: 28px; display: grid; align-content: center; }
+.stat { font-size: clamp(3rem, 7vw, 5.4rem); font-weight: 950; color: var(--orange); line-height: 1; }
+.stat-card p { margin: 10px 0 0; color: var(--muted); font-weight: 800; }
+.section-head { max-width: 920px; margin-bottom: 34px; }
+
+.ingredient-wheel {
+  position: relative;
+  width: min(92vw, 680px);
+  aspect-ratio: 1;
+  margin: 18px auto 32px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, rgba(249,115,22,.18), transparent 36%),
+    conic-gradient(from 30deg, rgba(249,115,22,.18), rgba(250,204,21,.18), rgba(34,197,94,.14), rgba(56,189,248,.14), rgba(249,115,22,.18));
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+.ingredient-wheel::before {
+  content: "";
+  position: absolute;
+  inset: 12%;
+  border: 2px dashed rgba(249,115,22,.32);
+  border-radius: 50%;
+  animation: spinSlow 30s linear infinite;
+}
+.center-pill {
+  position: absolute;
+  left: 50%; top: 50%; transform: translate(-50%, -50%);
+  width: min(42%, 250px);
+  aspect-ratio: 1.55/1;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  font-weight: 950;
+  padding: 20px;
+  background: linear-gradient(135deg, #fb923c, #f97316);
+  color: white;
+  box-shadow: 0 22px 55px rgba(194,65,12,.28);
+}
+.node {
+  --angle: calc(var(--i) * 60deg - 90deg);
+  position: absolute;
+  left: 50%; top: 50%;
+  width: clamp(110px, 19vw, 150px);
+  min-height: 58px;
+  transform: rotate(var(--angle)) translate(0, min(37vw, 270px)) rotate(calc(-1 * var(--angle))) translate(-50%, -50%);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--card-solid);
+  color: var(--text);
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 12px 30px rgba(124,45,18,.12);
+  transition: transform .2s ease, background .2s ease;
+}
+.node:hover, .node.active { background: var(--text); color: var(--bg); }
+.ingredient-detail {
+  max-width: 880px;
+  margin: 0 auto 34px;
+  padding: 26px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.ingredient-detail h3 span { color: var(--muted); font-size: .95rem; }
+.ingredient-detail p, .ingredient-detail li { color: var(--muted); }
+.cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.info-card { padding: 22px; }
+.info-card img { width: 110px; height: 110px; margin-bottom: 16px; }
+.info-card p { color: var(--muted); margin-bottom: 0; }
+
+.process-section { position: relative; }
+.process-stage {
+  border-radius: 42px;
+  min-height: 430px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, rgba(255,255,255,.55), rgba(249,115,22,.12));
+  border: 1px solid var(--line);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.machine { position: relative; width: min(88vw, 720px); height: 360px; }
+.hopper {
+  position: absolute; left: 50%; top: 12px; transform: translateX(-50%);
+  width: 190px; height: 110px;
+  clip-path: polygon(0 0, 100% 0, 72% 100%, 28% 100%);
+  background: rgba(124,45,18,.16);
+  border: 3px solid rgba(124,45,18,.28);
+}
+.powder {
+  position: absolute;
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--yellow);
+  left: 50%; top: 24px;
+  animation: powderFall 2.8s linear infinite;
+}
+.p2 { background: var(--orange); animation-delay: .25s; left: 38%; }
+.p3 { background: var(--green); animation-delay: .45s; left: 60%; }
+.p4 { background: var(--blue); animation-delay: .75s; left: 44%; }
+.p5 { background: var(--yellow); animation-delay: 1.05s; left: 56%; }
+.p6 { background: var(--orange); animation-delay: 1.35s; left: 49%; }
+.press-top, .press-bottom {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  width: 250px; height: 70px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #4b5563, #111827);
+  box-shadow: 0 15px 35px rgba(0,0,0,.24);
+}
+.press-top { top: 122px; animation: pressDown 2.8s ease-in-out infinite; }
+.press-bottom { top: 252px; height: 46px; }
+.die {
+  position: absolute; left: 50%; top: 195px; transform: translateX(-50%);
+  width: 320px; height: 74px;
+  border-radius: 24px;
+  background: #6b7280;
+  border: 8px solid #374151;
+  display: grid;
+  place-items: center;
+}
+.forming-pill {
+  width: 125px; height: 54px;
+  border-radius: 999px;
+  display: grid; place-items: center;
+  background: linear-gradient(135deg, #fb923c, #c2410c);
+  color: white; font-weight: 950;
+  animation: pillForm 2.8s ease-in-out infinite;
+}
+.belt {
+  position: absolute; left: 12%; right: 12%; bottom: 0;
+  height: 54px;
+  border-radius: 999px;
+  background: repeating-linear-gradient(90deg, #475569 0 30px, #334155 30px 60px);
+  overflow: hidden;
+}
+.mini-pill {
+  position: absolute; top: 9px;
+  width: 54px; height: 34px; border-radius: 999px;
+  display: grid; place-items: center;
+  background: linear-gradient(135deg, #fb923c, #c2410c);
+  color: white; font-weight: 950; font-size: .82rem;
+  animation: beltMove 5s linear infinite;
+}
+.mini-pill.a { left: -12%; }
+.mini-pill.b { left: 28%; animation-delay: -1.5s; }
+.mini-pill.c { left: 68%; animation-delay: -3s; }
+.timeline { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-top: 22px; }
+.step { padding: 22px; position: relative; overflow: hidden; }
+.step::after {
+  content: "";
+  position: absolute;
+  width: 90px; height: 90px; right: -28px; top: -28px;
+  border-radius: 50%; background: rgba(249,115,22,.12);
+}
+.num {
+  width: 42px; height: 42px;
+  display: grid; place-items: center;
+  border-radius: 15px;
+  background: var(--text); color: var(--bg);
+  font-weight: 950;
+  margin-bottom: 16px;
+}
+.step p { color: var(--muted); margin-bottom: 0; }
+
+.demo-grid { display: grid; grid-template-columns: .85fr 1.15fr; gap: 22px; align-items: stretch; }
+.lab-card { padding: 26px; }
+.lab-card label { display: block; font-weight: 950; margin: 16px 0 8px; }
+.lab-card input { width: 100%; accent-color: var(--orange); }
+.lab-result {
+  margin-top: 22px;
+  padding: 16px;
+  border-radius: 18px;
+  background: rgba(249,115,22,.13);
+  color: var(--deep);
+  font-weight: 900;
+}
+.tablet-demo {
+  min-height: 430px;
+  border: 1px solid var(--line);
+  border-radius: 42px;
+  box-shadow: var(--shadow);
+  background: radial-gradient(circle at center, rgba(56,189,248,.16), rgba(249,115,22,.1));
+  display: grid;
+  place-items: center;
+  position: relative;
+  overflow: hidden;
+}
+.demo-pill {
+  position: relative;
+  z-index: 2;
+  width: 230px; height: 140px;
+  border-radius: 999px;
+  display: grid; place-items: center;
+  background: linear-gradient(135deg, #fb923c, #c2410c);
+  color: white;
+  font-size: 4.4rem;
+  font-weight: 950;
+  box-shadow: inset 12px 12px 22px rgba(255,255,255,.22), inset -18px -18px 28px rgba(124,45,18,.32), 0 30px 62px rgba(194,65,12,.26);
+  transition: filter .25s ease, transform .25s ease, opacity .25s ease;
+}
+.demo-pill.bad { filter: saturate(.65) brightness(.82); transform: rotate(4deg) scale(.96); }
+.demo-pill.soft { animation: wobble 1.3s ease-in-out infinite; }
+.crack {
+  position: absolute;
+  width: 3px;
+  background: rgba(255,255,255,.62);
+  border-radius: 99px;
+  opacity: 0;
+  transform-origin: top;
+}
+.demo-pill.cracked .crack { opacity: 1; }
+.c1 { height: 58px; left: 47%; top: 24%; transform: rotate(25deg); }
+.c2 { height: 38px; left: 56%; top: 43%; transform: rotate(-38deg); }
+.c3 { height: 45px; left: 39%; top: 48%; transform: rotate(48deg); }
+.water-cup {
+  position: absolute;
+  bottom: 26px;
+  width: 260px; height: 110px;
+  border: 7px solid rgba(56,189,248,.55);
+  border-top: 0;
+  border-radius: 0 0 34px 34px;
+  overflow: hidden;
+}
+.water {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 60%;
+  background: rgba(56,189,248,.25);
+  animation: waterWave 3s ease-in-out infinite;
+}
+.bubble {
+  position: absolute; bottom: 10px;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  border: 2px solid rgba(56,189,248,.9);
+  animation: bubbleUp 2.2s ease-in-out infinite;
+}
+.bubble.one { left: 35%; }
+.bubble.two { left: 52%; animation-delay: -.7s; }
+.bubble.three { left: 64%; animation-delay: -1.2s; }
+.note { color: var(--muted); font-weight: 800; }
+
+.safety-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.safety-card { padding: 26px; }
+.icon { font-size: 2rem; display: inline-block; margin-bottom: 12px; }
+.safety-card p { color: var(--muted); margin-bottom: 0; }
+.references { padding: 28px; }
+.references p, .references li { color: var(--muted); }
+.references a { color: var(--deep); font-weight: 900; }
+.footer {
+  padding: 28px clamp(18px, 5vw, 86px);
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s ease, transform .7s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+@keyframes floatTablet {
+  0%,100% { transform: translate(-50%, -50%) rotate(-12deg) translateY(0); }
+  50% { transform: translate(-50%, -50%) rotate(-8deg) translateY(-18px); }
+}
+@keyframes drift { 50% { transform: translate(18px, -20px) scale(1.08); } }
+@keyframes floatChip { 50% { transform: translateY(-16px); } }
+@keyframes sparkle { 0% { transform: translateY(0) rotate(0); } 100% { transform: translateY(-40px) rotate(360deg); } }
+@keyframes spinSlow { to { transform: rotate(360deg); } }
+@keyframes powderFall { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: 1; } 100% { transform: translateY(170px); opacity: 0; } }
+@keyframes pressDown { 0%, 100% { transform: translateX(-50%) translateY(0); } 45%, 58% { transform: translateX(-50%) translateY(44px); } }
+@keyframes pillForm { 0%,30% { transform: scaleX(.55) scaleY(.55); opacity: .35; } 58%,100% { transform: scale(1); opacity: 1; } }
+@keyframes beltMove { from { transform: translateX(0); } to { transform: translateX(620px); } }
+@keyframes wobble { 0%,100% { transform: rotate(-2deg); } 50% { transform: rotate(2deg) scale(.98); } }
+@keyframes waterWave { 50% { height: 68%; transform: skewY(-2deg); } }
+@keyframes bubbleUp { from { transform: translateY(0) scale(.8); opacity: .2; } to { transform: translateY(-70px) scale(1.2); opacity: 0; } }
+
+@media (max-width: 980px) {
+  .hero { grid-template-columns: 1fr; min-height: unset; }
+  .hero-visual { min-height: 460px; }
+  .intro-grid, .cards, .timeline, .demo-grid, .safety-grid { grid-template-columns: 1fr 1fr; }
+  .big-card { grid-column: 1 / -1; }
+  .timeline .step:last-child { grid-column: 1 / -1; }
+  .nav { display: none; }
+}
+@media (max-width: 640px) {
+  .section { padding-left: 16px; padding-right: 16px; }
+  .hero-visual { min-height: 390px; border-radius: 30px; }
+  .float-chip { font-size: .8rem; padding: 10px 12px; }
+  .intro-grid, .cards, .timeline, .demo-grid, .safety-grid { grid-template-columns: 1fr; }
+  .ingredient-wheel { width: 100%; }
+  .node {
+    width: 106px;
+    min-height: 50px;
+    font-size: .78rem;
+    transform: rotate(var(--angle)) translate(0, 42vw) rotate(calc(-1 * var(--angle))) translate(-50%, -50%);
+  }
+  .center-pill { font-size: .88rem; }
+  .machine { transform: scale(.78); }
+  .process-stage { min-height: 350px; }
+  .topbar { gap: 8px; }
+  .brand small { display: none; }
+}
+
+  </style>
+</head>
+<body>
+  <header class="topbar" aria-label="แถบนำทาง">
+    <a class="brand" href="#hero" aria-label="กลับไปหน้าแรก">
+      <span class="brand-mark">C</span>
+      <span>Tablet Story</span><small>(เรื่องราวยาเม็ด)</small>
+    </a>
+    <nav class="nav">
+      <a href="#ingredients">ส่วนผสม</a>
+      <a href="#process">ขั้นตอน</a>
+      <a href="#demo">ทดลองดู</a>
+      <a href="#safety">ข้อควรรู้</a>
+    </nav>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="สลับโหมดสี">☀️</button>
+  </header>
+
+  <main>
+    <section class="hero section" id="hero">
+      <div class="hero-text">
+        <p class="eyebrow">วิตามินซีแบบเม็ดไม่ได้มีแค่วิตามินซี</p>
+        <h1>เม็ดวิตามินซีถูก “ขึ้นรูป” จากผงหลายชนิดที่ทำงานร่วมกัน</h1>
+        <p class="lead">
+          ตัววิตามินซีคือสารออกฤทธิ์ ส่วนรูปทรง ความแข็ง การละลาย และการไม่ติดเครื่องตอกเม็ด
+          มาจากสารช่วยผลิตหลายกลุ่ม เช่น ตัวเติม ตัวยึดเกาะ ตัวช่วยแตกตัว และตัวหล่อลื่น
+        </p>
+        <div class="hero-actions">
+          <a class="btn primary" href="#process">ดูการตอกเม็ด</a>
+          <a class="btn ghost" href="#ingredients">ดูส่วนผสม</a>
+        </div>
+      </div>
+
+      <div class="hero-visual" aria-label="ภาพจำลองเม็ดวิตามินซีและผงส่วนผสม">
+        <div class="orb orb-a"></div>
+        <div class="orb orb-b"></div>
+        <div class="tablet-main">
+          <span class="shine"></span>
+          <span class="score-line"></span>
+          <strong>C</strong>
+        </div>
+        <div class="float-chip chip-1">Ascorbic acid <span>(กรดแอสคอร์บิก)</span></div>
+        <div class="float-chip chip-2">Binder <span>(ตัวยึดเกาะ)</span></div>
+        <div class="float-chip chip-3">Lubricant <span>(ตัวหล่อลื่น)</span></div>
+        <div class="particle-field" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <section class="section intro-grid">
+      <article class="glass-card big-card reveal">
+        <h2>แนวคิดแบบเข้าใจง่าย</h2>
+        <p>
+          ให้คิดเหมือนทำขนมอัดเม็ด: ถ้ามีแค่ผงวิตามินซี ผงอาจไหลไม่ดี จับตัวไม่แน่น แตกง่าย
+          หรือเหนียวติดแม่พิมพ์ จึงต้องมี “ผู้ช่วย” เพื่อให้ผงรวมเป็นเม็ดที่แข็งพอดีและละลายตามต้องการ
+        </p>
+      </article>
+      <article class="stat-card reveal">
+        <span class="stat">4</span>
+        <p>กลุ่มสำคัญที่ทำให้ผงกลายเป็นเม็ด</p>
+      </article>
+      <article class="stat-card reveal">
+        <span class="stat">3</span>
+        <p>สิ่งที่ต้องคุม: ความชื้น แรงอัด และการไหลของผง</p>
+      </article>
+    </section>
+
+    <section class="section" id="ingredients">
+      <div class="section-head reveal">
+        <p class="eyebrow">ส่วนผสมที่ทำให้ขึ้นรูป</p>
+        <h2>แต่ละตัวไม่ได้ใส่เล่น ๆ ทุกตัวมีหน้าที่</h2>
+      </div>
+
+      <div class="ingredient-wheel reveal" aria-label="วงล้อส่วนผสมยาเม็ด">
+        <div class="center-pill">วิตามินซีเม็ด</div>
+        <button class="node active" data-target="active" style="--i:0">สารออกฤทธิ์</button>
+        <button class="node" data-target="filler" style="--i:1">ตัวเติม</button>
+        <button class="node" data-target="binder" style="--i:2">ตัวยึดเกาะ</button>
+        <button class="node" data-target="disintegrant" style="--i:3">ตัวช่วยแตกตัว</button>
+        <button class="node" data-target="lubricant" style="--i:4">ตัวหล่อลื่น</button>
+        <button class="node" data-target="coating" style="--i:5">สารเคลือบ</button>
+      </div>
+
+      <div class="ingredient-detail reveal" id="ingredientDetail" aria-live="polite">
+        <h3>Ascorbic acid <span>(กรดแอสคอร์บิก)</span></h3>
+        <p>เป็นตัววิตามินซีจริง ทำหน้าที่เป็นสารออกฤทธิ์ ไม่ใช่ตัวขึ้นรูปหลักเสมอไป</p>
+        <ul>
+          <li>ไวต่อความชื้นและอากาศ จึงต้องเก็บให้แห้ง</li>
+          <li>บางสูตรใช้ Sodium ascorbate (โซเดียมแอสคอร์เบต) เพื่อลดความเป็นกรด</li>
+        </ul>
+      </div>
+
+      <div class="cards">
+        <article class="info-card reveal">
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMjAgMjIwIiByb2xlPSJpbWciIGFyaWEtbGFiZWw9IuC4leC4seC4p+C5gOC4leC4tOC4oSI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwIiB4Mj0iMSIgeTE9IjAiIHkyPSIxIj48c3RvcCBzdG9wLWNvbG9yPSIjZmVkN2FhIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjZjk3MzE2Ii8+PC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9IjIyMCIgaGVpZ2h0PSIyMjAiIHJ4PSI0NiIgZmlsbD0iI2ZmZjdlZCIvPgogIDxjaXJjbGUgY3g9IjcyIiBjeT0iNzAiIHI9IjI2IiBmaWxsPSIjZmRlNjhhIi8+CiAgPGNpcmNsZSBjeD0iMTMwIiBjeT0iNjQiIHI9IjE4IiBmaWxsPSIjZmRiYTc0Ii8+CiAgPGNpcmNsZSBjeD0iMTU0IiBjeT0iMTEyIiByPSIzMSIgZmlsbD0iI2ZlZDdhYSIvPgogIDxwYXRoIGQ9Ik00MyAxNDRjMzYtMjAgOTctMjAgMTM0IDAgMTAgNSAxMCAyMCAwIDI2LTM2IDIyLTk4IDIyLTEzNCAwLTEwLTYtMTAtMjEgMC0yNloiIGZpbGw9InVybCgjZykiLz4KICA8cGF0aCBkPSJNNzAgMTU0aDgwIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iOSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIuOCIvPgo8L3N2Zz4K" alt="ภาพตัวเติมช่วยเพิ่มเนื้อเม็ด" />
+          <h3>Filler (ตัวเติม)</h3>
+          <p>เพิ่มปริมาตรให้เม็ดมีขนาดจับง่ายและช่วยให้ผงอัดตัวได้ดี เช่น Microcrystalline cellulose (เซลลูโลสผลึกจุลภาค)</p>
+        </article>
+        <article class="info-card reveal">
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMjAgMjIwIiByb2xlPSJpbWciIGFyaWEtbGFiZWw9IuC4leC4seC4p+C4ouC4tuC4lOC5gOC4geC4suC4sCI+CiAgPHJlY3Qgd2lkdGg9IjIyMCIgaGVpZ2h0PSIyMjAiIHJ4PSI0NiIgZmlsbD0iI2ZmZjdlZCIvPgogIDxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2Y5NzMxNiIgc3Ryb2tlLXdpZHRoPSIxMCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIj4KICAgIDxwYXRoIGQ9Ik02NSA3NWMzMiAxMCA1OCAxMCA5MCAwIi8+CiAgICA8cGF0aCBkPSJNNjUgMTEyYzMyLTEwIDU4LTEwIDkwIDAiLz4KICAgIDxwYXRoIGQ9Ik02NSAxNDljMzIgMTAgNTggMTAgOTAgMCIvPgogIDwvZz4KICA8ZyBmaWxsPSIjZmVkN2FhIiBzdHJva2U9IiNjMjQxMGMiIHN0cm9rZS13aWR0aD0iNiI+CiAgICA8Y2lyY2xlIGN4PSI1OCIgY3k9Ijc1IiByPSIyMCIvPgogICAgPGNpcmNsZSBjeD0iMTYyIiBjeT0iNzUiIHI9IjIwIi8+CiAgICA8Y2lyY2xlIGN4PSI1OCIgY3k9IjExMiIgcj0iMjAiLz4KICAgIDxjaXJjbGUgY3g9IjE2MiIgY3k9IjExMiIgcj0iMjAiLz4KICAgIDxjaXJjbGUgY3g9IjU4IiBjeT0iMTQ5IiByPSIyMCIvPgogICAgPGNpcmNsZSBjeD0iMTYyIiBjeT0iMTQ5IiByPSIyMCIvPgogIDwvZz4KPC9zdmc+Cg==" alt="ภาพตัวยึดเกาะดึงผงให้รวมกัน" />
+          <h3>Binder (ตัวยึดเกาะ)</h3>
+          <p>ทำให้ผงเกาะกันแน่นขึ้น เม็ดไม่ร่วนง่าย เช่น Povidone (โพวิโดน) หรือ Starch (แป้ง)</p>
+        </article>
+        <article class="info-card reveal">
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMjAgMjIwIiByb2xlPSJpbWciIGFyaWEtbGFiZWw9IuC4leC4seC4p+C4iuC5iOC4p+C4ouC5geC4leC4geC4leC4seC4pyI+CiAgPHJlY3Qgd2lkdGg9IjIyMCIgaGVpZ2h0PSIyMjAiIHJ4PSI0NiIgZmlsbD0iI2YwZjlmZiIvPgogIDxwYXRoIGQ9Ik00MyAxNDVoMTM0djI1YzAgMTMtMTIgMjQtMjYgMjRINjljLTE0IDAtMjYtMTEtMjYtMjR2LTI1WiIgZmlsbD0iI2JhZTZmZCIvPgogIDxwYXRoIGQ9Ik00MyAxNDVjMjUgMTMgMTA4IDEzIDEzNCAwIiBmaWxsPSJub25lIiBzdHJva2U9IiMzOGJkZjgiIHN0cm9rZS13aWR0aD0iNiIvPgogIDxwYXRoIGQ9Ik03NCA2OWMyMi0xNiA1Mi0xNiA3NCAwIDkgNyA5IDIxIDAgMjgtMjIgMTYtNTIgMTYtNzQgMC05LTctOS0yMSAwLTI4WiIgZmlsbD0iI2ZiOTIzYyIvPgogIDxwYXRoIGQ9Ik0xMTEgNjJ2NDVNODggNzRsMjQgMjAgMjItMjIiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSI3IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8Y2lyY2xlIGN4PSI3NCIgY3k9IjEzNSIgcj0iOCIgZmlsbD0iIzM4YmRmOCIvPgogIDxjaXJjbGUgY3g9IjE0MyIgY3k9IjEyOCIgcj0iNiIgZmlsbD0iIzM4YmRmOCIvPgogIDxjaXJjbGUgY3g9IjExMiIgY3k9IjE1MyIgcj0iNSIgZmlsbD0iIzM4YmRmOCIvPgo8L3N2Zz4K" alt="ภาพเม็ดแตกตัวในน้ำ" />
+          <h3>Disintegrant (ตัวช่วยแตกตัว)</h3>
+          <p>ช่วยให้เม็ดแยกตัวเมื่อโดนน้ำหรือน้ำย่อย เช่น Crospovidone (ครอสโพวิโดน)</p>
+        </article>
+        <article class="info-card reveal">
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMjAgMjIwIiByb2xlPSJpbWciIGFyaWEtbGFiZWw9IuC4leC4seC4p+C4q+C4peC5iOC4reC4peC4t+C5iOC4mSI+CiAgPHJlY3Qgd2lkdGg9IjIyMCIgaGVpZ2h0PSIyMjAiIHJ4PSI0NiIgZmlsbD0iI2Y4ZmFmYyIvPgogIDxyZWN0IHg9IjQyIiB5PSI2MCIgd2lkdGg9IjEzNiIgaGVpZ2h0PSI0MCIgcng9IjE2IiBmaWxsPSIjNDc1NTY5Ii8+CiAgPHJlY3QgeD0iNDIiIHk9IjEyNCIgd2lkdGg9IjEzNiIgaGVpZ2h0PSI0MCIgcng9IjE2IiBmaWxsPSIjNDc1NTY5Ii8+CiAgPHBhdGggZD0iTTcyIDEwNGMyMiAxMiA1NCAxMiA3NiAwIiBzdHJva2U9IiMzOGJkZjgiIHN0cm9rZS13aWR0aD0iMTAiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgZmlsbD0ibm9uZSIvPgogIDxlbGxpcHNlIGN4PSIxMTAiIGN5PSIxMTMiIHJ4PSI0OCIgcnk9IjIyIiBmaWxsPSIjZmI5MjNjIi8+CiAgPHBhdGggZD0iTTg1IDExMmg1MCIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjciIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iLjgiLz4KICA8Y2lyY2xlIGN4PSI2MyIgY3k9IjQ1IiByPSI4IiBmaWxsPSIjMzhiZGY4Ii8+CiAgPGNpcmNsZSBjeD0iMTU3IiBjeT0iMTgxIiByPSI4IiBmaWxsPSIjMzhiZGY4Ii8+Cjwvc3ZnPgo=" alt="ภาพตัวหล่อลื่นช่วยไม่ให้ผงติดแม่พิมพ์" />
+          <h3>Lubricant (ตัวหล่อลื่น)</h3>
+          <p>ลดการติดเครื่องและช่วยให้เม็ดหลุดจากแม่พิมพ์ เช่น Magnesium stearate (แมกนีเซียมสเตียเรต)</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section process-section" id="process">
+      <div class="section-head reveal">
+        <p class="eyebrow">จากผงไปเป็นเม็ด</p>
+        <h2>กระบวนการผลิตแบบจำลอง</h2>
+      </div>
+
+      <div class="process-stage reveal" aria-label="อนิเมชั่นกระบวนการตอกเม็ด">
+        <div class="machine">
+          <div class="hopper">
+            <span class="powder p1"></span><span class="powder p2"></span><span class="powder p3"></span>
+            <span class="powder p4"></span><span class="powder p5"></span><span class="powder p6"></span>
+          </div>
+          <div class="press-top"></div>
+          <div class="die">
+            <div class="forming-pill">C</div>
+          </div>
+          <div class="press-bottom"></div>
+          <div class="belt">
+            <span class="mini-pill a">C</span>
+            <span class="mini-pill b">C</span>
+            <span class="mini-pill c">C</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline">
+        <article class="step reveal">
+          <span class="num">1</span>
+          <h3>ชั่งและร่อนผง</h3>
+          <p>ทำให้ผงสม่ำเสมอ ลดก้อนใหญ่ และช่วยให้ผสมง่ายขึ้น</p>
+        </article>
+        <article class="step reveal">
+          <span class="num">2</span>
+          <h3>ผสมสารช่วยผลิต</h3>
+          <p>เติมตัวเติม ตัวยึดเกาะ ตัวช่วยแตกตัว และสารช่วยไหลตามสูตร</p>
+        </article>
+        <article class="step reveal">
+          <span class="num">3</span>
+          <h3>ทำแกรนูลหรือผสมแห้ง</h3>
+          <p>บางสูตรทำเป็น Granule (เม็ดผงเล็ก) เพื่อให้ไหลดีและอัดแน่นขึ้น</p>
+        </article>
+        <article class="step reveal">
+          <span class="num">4</span>
+          <h3>ตอกเม็ด</h3>
+          <p>เครื่องกดผงในแม่พิมพ์ด้วยแรงอัด จนได้เม็ดที่แข็งและมีรูปทรง</p>
+        </article>
+        <article class="step reveal">
+          <span class="num">5</span>
+          <h3>เคลือบและบรรจุ</h3>
+          <p>บางสูตรเคลือบเพื่อลดกลิ่นรสเปรี้ยว ลดความชื้น และทำให้กลืนง่าย</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section demo-section" id="demo">
+      <div class="section-head reveal">
+        <p class="eyebrow">ลองปรับสูตรแบบจำลอง</p>
+        <h2>ปรับแรงอัดกับความชื้น แล้วดูผลต่อเม็ด</h2>
+      </div>
+      <div class="demo-grid">
+        <div class="lab-card reveal">
+          <label for="pressure">แรงอัด</label>
+          <input id="pressure" type="range" min="0" max="100" value="62" />
+          <label for="moisture">ความชื้น</label>
+          <input id="moisture" type="range" min="0" max="100" value="25" />
+          <label for="binder">ตัวยึดเกาะ</label>
+          <input id="binder" type="range" min="0" max="100" value="45" />
+          <div class="lab-result" id="labResult">เม็ดค่อนข้างดี: แข็งพอดี แตกตัวได้</div>
+        </div>
+
+        <div class="tablet-demo reveal" aria-label="เม็ดวิตามินซีจำลอง">
+          <div class="demo-pill" id="demoPill">
+            <span>C</span>
+            <i class="crack c1"></i>
+            <i class="crack c2"></i>
+            <i class="crack c3"></i>
+          </div>
+          <div class="water-cup">
+            <div class="water"></div>
+            <span class="bubble one"></span><span class="bubble two"></span><span class="bubble three"></span>
+          </div>
+        </div>
+      </div>
+      <p class="note reveal">หมายเหตุ: ส่วนนี้เป็นภาพจำลองเพื่อการเรียนรู้ ไม่ใช่สูตรผลิตจริง</p>
+    </section>
+
+    <section class="section safety" id="safety">
+      <div class="section-head reveal">
+        <p class="eyebrow">ข้อควรรู้</p>
+        <h2>ทำไมสูตรเม็ดต้องคุมละเอียด</h2>
+      </div>
+      <div class="safety-grid">
+        <article class="safety-card reveal">
+          <span class="icon">💧</span>
+          <h3>ความชื้น</h3>
+          <p>วิตามินซีไวต่อความชื้น ถ้าชื้นเกินไปอาจเสื่อมเร็ว เม็ดเปลี่ยนสี หรือจับตัวเป็นก้อน</p>
+        </article>
+        <article class="safety-card reveal">
+          <span class="icon">⚙️</span>
+          <h3>แรงอัด</h3>
+          <p>แรงอัดน้อยเกินไปเม็ดร่วน แรงอัดมากเกินไปเม็ดอาจละลายช้าหรือแตกตัวยาก</p>
+        </article>
+        <article class="safety-card reveal">
+          <span class="icon">🧪</span>
+          <h3>สารช่วยผลิต</h3>
+          <p>สารช่วยผลิตต้องเลือกให้เหมาะกับการกิน และใช้ในระดับที่ผ่านมาตรฐานของผลิตภัณฑ์</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section references reveal">
+      <h2>แหล่งอ้างอิงสำหรับอ่านต่อ</h2>
+      <p>
+        FDA (องค์การอาหารและยาสหรัฐฯ) มี Inactive Ingredients Database (ฐานข้อมูลสารไม่ออกฤทธิ์) สำหรับดูสารช่วยผลิตที่พบในผลิตภัณฑ์ยา และ USP (เภสัชตำรับสหรัฐฯ) มีมาตรฐานเกี่ยวกับ Excipients (สารช่วยผลิต)
+      </p>
+      <ul>
+        <li><a href="https://www.fda.gov/drugs/drug-approvals-and-databases/inactive-ingredients-database-download" target="_blank" rel="noreferrer">FDA Inactive Ingredients Database (ฐานข้อมูลสารไม่ออกฤทธิ์ขององค์การอาหารและยาสหรัฐฯ)</a></li>
+        <li><a href="https://www.usp.org/excipients" target="_blank" rel="noreferrer">USP Excipients (มาตรฐานสารช่วยผลิตของเภสัชตำรับสหรัฐฯ)</a></li>
+        <li><a href="https://pubs.acs.org/doi/10.1021/jf903342f" target="_blank" rel="noreferrer">งานศึกษาเรื่องความชื้นกับความคงตัวของวิตามินซี</a></li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>เว็บนี้ทำเพื่ออธิบายหลักการทั่วไปของการขึ้นรูปเม็ดวิตามินซี ไม่ใช่คู่มือผลิตยา/อาหารเสริมจริง</p>
+  </footer>
+  <script>
+const details = {
+  active: {
+    title: 'Ascorbic acid <span>(กรดแอสคอร์บิก)</span>',
+    text: 'เป็นตัววิตามินซีจริง ทำหน้าที่เป็นสารออกฤทธิ์ ไม่ใช่ตัวขึ้นรูปหลักเสมอไป',
+    items: ['ไวต่อความชื้นและอากาศ จึงต้องเก็บให้แห้ง', 'บางสูตรใช้ Sodium ascorbate (โซเดียมแอสคอร์เบต) เพื่อลดความเป็นกรด']
+  },
+  filler: {
+    title: 'Filler <span>(ตัวเติม)</span>',
+    text: 'เพิ่มเนื้อเม็ด ทำให้เม็ดมีขนาดจับง่าย และช่วยให้ผงอัดตัวได้ดีขึ้น',
+    items: ['ตัวอย่าง: Microcrystalline cellulose (เซลลูโลสผลึกจุลภาค)', 'ตัวอย่าง: Mannitol (แมนนิทอล) ในเม็ดเคี้ยวบางสูตร']
+  },
+  binder: {
+    title: 'Binder <span>(ตัวยึดเกาะ)</span>',
+    text: 'ทำหน้าที่เหมือนกาวระดับผง ช่วยให้อนุภาคจับกันจนเป็นเม็ดที่ไม่ร่วนง่าย',
+    items: ['ตัวอย่าง: Povidone (โพวิโดน)', 'ถ้าใส่น้อยไปเม็ดอาจแตกหรือร่วน ถ้ามากไปอาจละลายช้า']
+  },
+  disintegrant: {
+    title: 'Disintegrant <span>(ตัวช่วยแตกตัว)</span>',
+    text: 'ช่วยให้เม็ดแยกออกเป็นชิ้นเล็กเมื่อโดนน้ำ ทำให้สารออกฤทธิ์ออกมาได้ดีขึ้น',
+    items: ['ตัวอย่าง: Crospovidone (ครอสโพวิโดน)', 'หลักการคือดูดน้ำหรือพองตัวเพื่อดันเม็ดให้แตก']
+  },
+  lubricant: {
+    title: 'Lubricant <span>(ตัวหล่อลื่น)</span>',
+    text: 'ช่วยให้ผงไม่ติดแม่พิมพ์และช่วยให้เม็ดถูกดันออกจากเครื่องได้เรียบขึ้น',
+    items: ['ตัวอย่าง: Magnesium stearate (แมกนีเซียมสเตียเรต)', 'ถ้าใส่มากเกินไปบางสูตรอาจทำให้เม็ดเปียกน้ำยากขึ้น']
+  },
+  coating: {
+    title: 'Coating <span>(สารเคลือบเม็ด)</span>',
+    text: 'ช่วยให้กลืนง่าย ลดกลิ่นรส หรือช่วยป้องกันความชื้นในบางสูตร',
+    items: ['ตัวอย่าง: HPMC (ไฮดรอกซีโพรพิลเมทิลเซลลูโลส)', 'บางสูตรไม่เคลือบ แต่ใช้รสหวานหรือกลิ่นผลไม้แทน']
+  }
+};
+
+const nodes = document.querySelectorAll('.node');
+const detail = document.getElementById('ingredientDetail');
+
+nodes.forEach(node => {
+  node.addEventListener('click', () => {
+    nodes.forEach(n => n.classList.remove('active'));
+    node.classList.add('active');
+    const data = details[node.dataset.target];
+    detail.innerHTML = `
+      <h3>${data.title}</h3>
+      <p>${data.text}</p>
+      <ul>${data.items.map(item => `<li>${item}</li>`).join('')}</ul>
+    `;
+  });
+});
+
+const pressure = document.getElementById('pressure');
+const moisture = document.getElementById('moisture');
+const binder = document.getElementById('binder');
+const labResult = document.getElementById('labResult');
+const demoPill = document.getElementById('demoPill');
+
+function updateDemo() {
+  const p = Number(pressure.value);
+  const m = Number(moisture.value);
+  const b = Number(binder.value);
+  demoPill.classList.remove('bad', 'soft', 'cracked');
+
+  let message = 'เม็ดค่อนข้างดี: แข็งพอดี แตกตัวได้';
+  demoPill.style.opacity = '1';
+  demoPill.style.transform = `scale(${0.92 + p / 420})`;
+
+  if (p < 32 || b < 25) {
+    message = 'เม็ดร่วนง่าย: แรงอัดหรือตัวยึดเกาะน้อยเกินไป';
+    demoPill.classList.add('cracked');
+  } else if (p > 82 || b > 78) {
+    message = 'เม็ดแข็งเกินไป: อาจแตกตัวช้าและละลายยาก';
+    demoPill.classList.add('bad');
+  } else if (m > 65) {
+    message = 'ความชื้นสูง: เสี่ยงจับตัวเป็นก้อน สีเปลี่ยน หรือเสื่อมไว';
+    demoPill.classList.add('soft', 'bad');
+  } else if (m < 12) {
+    message = 'แห้งมาก: ผงบางสูตรอาจฟุ้งและอัดติดกันยาก';
+    demoPill.classList.add('cracked');
+  }
+  labResult.textContent = message;
+}
+[pressure, moisture, binder].forEach(input => input.addEventListener('input', updateDemo));
+updateDemo();
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, { threshold: 0.14 });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+const themeToggle = document.getElementById('themeToggle');
+themeToggle.addEventListener('click', () => {
+  const dark = document.documentElement.dataset.theme === 'dark';
+  document.documentElement.dataset.theme = dark ? '' : 'dark';
+  themeToggle.textContent = dark ? '☀️' : '🌙';
+});
+
+  </script>
+</body>
+</html>
